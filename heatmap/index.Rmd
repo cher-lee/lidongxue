@@ -14,7 +14,7 @@ output:
 # 引言
 介绍自己的可视化项目
 
-<iframe width='100%' height='700px' frameBorder='0' src='https://cher-lee.github.io/lidongxue/heatmap/'></iframe>
+<iframe width='100%' height='700px' frameBorder='0' src='https://cher-lee.github.io/lidongxue/heatmap/heatmaptest.html'></iframe>
 
 ```{r}
 library(leaflet)
