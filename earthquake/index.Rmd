@@ -24,5 +24,5 @@ output:
 点击具体地震点可显示地震详细信息，包括地点，时间，震级，经纬度，深度
 
 # 地图展示
-<a href="https://cher-lee.github.io/lidongxue/heatmap/heatmaptest.html" class="btn btn-success"> 全屏查看</a>
-<iframe width='100%' height='700px' frameBorder='0' src='https://cher-lee.github.io/lidongxue/heatmap/heatmaptest.html'></iframe>
+<a href="https://cher-lee.github.io/lidongxue/earthquake/earthquake.html" class="btn btn-success"> 全屏查看</a>
+<iframe width='100%' height='700px' frameBorder='0' src='https://cher-lee.github.io/lidongxue/earthquake/earthquake.html'></iframe>
