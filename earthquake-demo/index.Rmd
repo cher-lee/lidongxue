@@ -1,0 +1,28 @@
+---
+title: "2017中国地震数据可视化"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    highlight: github # vignette github
+    toc: true
+    toc_depth: 4
+    number_sections: true
+---
+
+# 作品介绍
+## 作品名称
+2017中国地震数据可视化
+
+## 数据来源
+国家地震科学数据共享中心
+
+## 操作说明
+根据地震发生密集程度绘制热力图
+
+地图放大后会显示具体的地震点，不同颜色代表不同的震级
+
+点击具体地震点可显示地震详细信息，包括地点，时间，震级，经纬度，深度
+
+# 地图展示
+<a href="https://cher-lee.github.io/lidongxue/earthquake/earthquake.html" class="btn btn-success"> 全屏查看</a>
+<iframe width='100%' height='700px' frameBorder='0' src='https://cher-lee.github.io/lidongxue/earthquake/earthquake.html'></iframe>

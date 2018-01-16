@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.42.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+      .map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 5px;
+}
+
+#features {
+  top: 0;
+  height: 100px;
+  margin-top: 20px;
+  width: 250px;
+}
+      #legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 180px;
+  margin-bottom: 40px;
+  width: 130px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 50px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+    </style>
+</head>
+<body>
+  <div id='map'></div>
+  <div class='map-overlay' id='legend'></div>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlcmxlZSIsImEiOiJjamIzMHE1cXMyY3o2MzNzN3liNjVsZGNvIn0.0PsFM8lGyRoOqDDsp8bi2w';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      // style: 'mapbox://styles/mapbox/dark-v9',
+      style: 'mapbox://styles/cherlee/cjbrew43606kj2sqpq203ib2l',
+      // style:'mapbox://styles/cherlee/cjbq4b5ry7j022smubbvb9w4x',
+      center: [109.5, 40.7],
+      zoom: 3
+    });
+
+    map.on('load', function() {
+
+   map.addSource('earthquake', {
+     type: 'geojson',
+     data: './earthquake.geojson'
+   });
+//    map.addSource('earthquake', {
+//    type: 'geojson',
+//    data: {
+//        "type": "FeatureCollection",
+//        "features": [{"type":"Feature","properties":{"date":"2017-12-29 10:58:31","mag":3,"lat":41.18,"lon":83.7,"deep_km_":7,"position":"新疆阿克苏地区库车县"},"geometry":{"type":"Point","coordinates":[83.7,41.18]}},{"type":"Feature","properties":{"date":"2017-12-29 07:25:01","mag":3,"lat":40.58,"lon":77.6,"deep_km_":10,"position":"新疆克孜勒苏州阿图什市"},"geometry":{"type":"Point","coordinates":[77.6,40.58]}},{"type":"Feature","properties":{"date":"2017-12-28 01:11:38","mag":3,"lat":38.19,"lon":81.78,"deep_km_":31,"position":"新疆和田地区于田县"},"geometry":{"type":"Point","coordinates":[81.78,38.19]}},{"type":"Feature","properties":{"date":"2017-12-27 21:56:51","mag":5.2,"lat":38.63,"lon":72.01,"deep_km_":8,"position":"塔吉克斯坦"},"geometry":{"type":"Point","coordinates":[72.01,38.63]}},{"type":"Feature","properties":{"date":"2017-12-27 12:40:47","mag":3.9,"lat":36.53,"lon":77.96,"deep_km_":103,"position":"新疆和田地区皮山县"},"geometry":{"type":"Point","coordinates":[77.96,36.53]}}
+//        ]
+//    }
+// });
+   map.addLayer({
+  id: 'earthquake-heat',
+  type: 'heatmap',
+  source: 'earthquake',
+  maxzoom: 15,
+  paint: {
+    // increase weight as diameter breast height increases
+    'heatmap-weight': {
+      property: 'mag',
+      type: 'exponential',
+      stops: [
+        [1, 0],
+        // [3, 0.5],
+        [12, 1]
+      ]
+    },
+    // increase intensity as zoom level increases
+    'heatmap-intensity': {
+      stops: [
+        [2.9, 0.5],
+        [3, 10],
+        [4, 4]
+      ]
+    },
+    // assign color values be applied to points depending on their density
+    'heatmap-color': [
+      'interpolate',
+      ['linear'],
+      ['heatmap-density'],
+      0, 'rgba(236,222,239,0)',
+      0.2, 'rgb(41,255,35)',
+      0.4, 'rgb(127,237,59)',
+      0.6, 'rgb(227,242,125)',
+      0.8, 'rgb(219,250,61)',
+      1.0, 'rgb(247,43,60)'
+    ],
+    // increase radius as zoom increases
+    'heatmap-radius': {
+      stops: [
+        [3, 15],
+        [4, 15]
+      ]
+    },
+    // decrease opacity to transition into the circle layer
+    'heatmap-opacity': {
+      default: 1,
+      stops: [
+        [3, 0.8],
+        [4,1],
+        [5, 0]
+      ]
+    },
+  }
+}, 'waterway-label');
+map.addLayer({
+id: 'earthquake-point',
+type: 'circle',
+source: 'earthquake',
+minzoom: 5,
+paint: {
+ // increase the radius of the circle as the zoom level and mag value increases
+ 'circle-radius': {
+   property: 'mag',
+   type: 'exponential',
+   stops: [
+     [{ zoom: 5, value: 1 }, 10],
+     [{ zoom: 6, value: 62 }, 12],
+     [{ zoom: 7, value: 1 }, 15],
+     [{ zoom: 8, value: 62 }, 20],
+   ]
+ },
+ 'circle-color': {
+   property: 'mag',
+   type: 'exponential',
+   stops: [
+     [0, 'rgb(219,250,61)'],
+     [3, 'rgb(41,255,35)'],
+     [5, 'rgb(247,43,60)'],
+     [12, 'rgb(0,0,0)']
+   ]
+ },
+ 'circle-stroke-color': 'white',
+ 'circle-stroke-width': 1,
+ 'circle-opacity': {
+   stops: [
+     [5, 0.5],
+     [6, 1]
+   ]
+ }
+}
+}, 'waterway-label');
+// map.on('click', function(e) {
+//   var features = map.queryRenderedFeatures(e.point, {
+//     layers: ['{earthquake-heat}'] // replace this with the name of the layer
+//   });
+//
+//   if (!features.length) {
+//     return;
+//   }
+//
+//   var feature = features[0];
+//
+//   var popup = new mapboxgl.Popup({ offset: [0, -15] })
+//     .setLngLat(feature.geometry.coordinates)
+//     .setHTML('<h3>' + feature.properties.name + '</h3><p>' + feature.properties.date + '</p>')
+//     .setLngLat(feature.geometry.coordinates)
+//     .addTo(map);
+// });
+var layers = ['< 0.2', '0.2-0.4', '0.4-0.6', '0.6-0.8', '> 0.8'];
+var colors = ['rgb(41,255,35)', 'rgb(127,237,59)', 'rgb(227,242,125)', 'rgb(219,250,61)', 'rgb(247,43,60)'];
+for (i = 0; i < layers.length; i++) {
+  var layer = layers[i];
+  var color = colors[i];
+  var item = document.createElement('div');
+  var key = document.createElement('span');
+  key.className = 'legend-key';
+  key.style.backgroundColor = color;
+
+  var value = document.createElement('span');
+  value.innerHTML = layer;
+  item.appendChild(key);
+  item.appendChild(value);
+  legend.appendChild(item);
+};
+
+map.on('click', 'earthquake-point', function(e) {
+  new mapboxgl.Popup({ offset: [0, -15] })
+    .setLngLat(e.features[0].geometry.coordinates)
+    // .setHTML('<b>mag:</b> ' + e.features[0].properties.mag+e.features[0].properties.mag+e.features[0].properties.mag)
+.setHTML('<h3>' + e.features[0].properties.position + '</h3><p>' +"date: "+ e.features[0].properties.date + '</p><p>' +"magnitude: "+ e.features[0].properties.mag + '</p><p>' +"longitude: "+ e.features[0].properties.lon + '</p><p>' +"latitude: "+ e.features[0].properties.lat +'</p><p>' +"deep: "+ e.features[0].properties.deep_km_ +"km"+'</p>')
+    .addTo(map);
+});
+ });
+
+  </script>
+</body>
+</html>
