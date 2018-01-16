@@ -1,6 +1,7 @@
 ---
 title: "2017中国地震数据可视化"
-date: "`r Sys.Date()`"
+author: "李冬雪"
+date: "2017-12-30"
 output:
   prettydoc::html_pretty:
     highlight: github # vignette github
